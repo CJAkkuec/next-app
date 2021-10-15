@@ -1,35 +1,83 @@
 import Link from "next/link";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Card } from "../../components/Card";
 import { useState } from "react";
+
+import { tada } from "react-animations";
 
 export default function Home({ details }) {
   const generateFighters = () => {
     setFighterA([details[Math.floor(Math.random() * details.length)]]);
     setFighterB([details[Math.floor(Math.random() * details.length)]]);
-    setWinner("");
+    setWinner();
   };
 
   const [fighterA, setFighterA] = useState([]);
   const [fighterB, setFighterB] = useState([]);
   const [winner, setWinner] = useState([]);
 
-  const compareFighters = (fighterA, fighterB) => {
+  const compareFighters = (fighterA, fighterB, fighterAName, fighterBName) => {
     if (fighterA > fighterB) {
-      setWinner("Fighter A wins!");
+      setWinner(<FightResult>{fighterAName} wins!</FightResult>);
     }
     if (fighterB > fighterA) {
-      setWinner("Fighter B wins!");
+      setWinner(<FightResult>{fighterBName} wins!</FightResult>);
     }
     if (fighterA === fighterB) {
-      setWinner("Draw!");
+      setWinner(<FightResult>Draw!</FightResult>);
     }
   };
 
   return (
     <MainDiv>
       <IntroDiv>
-        <h1>Fight!</h1>
+        <h1>BATTLE ARENA</h1>
+      </IntroDiv>
+      <StyledSection>
+        <StyledButton1 onClick={() => generateFighters()}>
+          Choose Your Fighters!
+        </StyledButton1>
+        <Arena>
+          <StyledCard>
+            {fighterA.map((pokemon) => {
+              return (
+                <Card
+                  hp={pokemon.stats[0].base_stat}
+                  name={pokemon.name}
+                  image={pokemon.sprites.front_default}
+                  key={pokemon.id}
+                />
+              );
+            })}
+          </StyledCard>
+          <StyledCard>
+            {fighterB.map((pokemon) => {
+              return (
+                <Card
+                  hp={pokemon.stats[0].base_stat}
+                  name={pokemon.name}
+                  image={pokemon.sprites.front_default}
+                  key={pokemon.id}
+                />
+              );
+            })}
+          </StyledCard>
+        </Arena>
+        <StyledButton2
+          onClick={() =>
+            compareFighters(
+              fighterA[0].stats[0].base_stat,
+              fighterB[0].stats[0].base_stat,
+              fighterA[0].name,
+              fighterB[0].name
+            )
+          }
+        >
+          Fight!
+        </StyledButton2>
+        <Tada>{winner}</Tada>
+      </StyledSection>
+      <IntroDiv>
         <p>
           {" "}
           Zurück zur{" "}
@@ -38,48 +86,6 @@ export default function Home({ details }) {
           </Link>
         </p>
       </IntroDiv>
-      <StyledSection>
-        <StyledButton1 onClick={() => generateFighters()}>
-          Choose Your Fighters!
-        </StyledButton1>
-        <StyledCard>
-          {fighterA.map((pokemon) => {
-            return (
-              <Card
-                hp={pokemon.stats[0].base_stat}
-                name={pokemon.name}
-                image={pokemon.sprites.front_default}
-                key={pokemon.id}
-              />
-            );
-          })}
-        </StyledCard>
-        <StyledCard>
-          {fighterB.map((pokemon) => {
-            return (
-              <Card
-                hp={pokemon.stats[0].base_stat}
-                name={pokemon.name}
-                image={pokemon.sprites.front_default}
-                key={pokemon.id}
-              />
-            );
-          })}
-        </StyledCard>
-        <StyledButton2
-          onClick={() =>
-            compareFighters(
-              fighterA[0].stats[0].base_stat,
-              fighterB[0].stats[0].base_stat
-            )
-          }
-        >
-          Fight!
-        </StyledButton2>
-        <div>
-          <p>{winner}</p>
-        </div>
-      </StyledSection>
     </MainDiv>
   );
 }
@@ -108,10 +114,6 @@ export async function getStaticProps() {
   };
 }
 
-const StyledImage = styled.img`
-  border-radius: 50%;
-`;
-
 const StyledSection = styled.section`
   display: flex;
   flex-wrap: wrap;
@@ -134,7 +136,7 @@ const StyledButton1 = styled.button`
   background: lightblue;
   border: none;
   border-radius: 10px;
-  width: 50%;
+  width: 100%;
   padding: 1rem;
 `;
 
@@ -142,11 +144,40 @@ const StyledButton2 = styled.button`
   background: lightpink;
   border: none;
   border-radius: 10px;
-  width: 50%;
+  width: 100%;
   padding: 1rem;
 `;
 
 const StyledCard = styled.div`
   display: flex;
-  flex: column;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Arena = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem;
+  border-radius: 30%;
+  width: 500px;
+  background: #eeebe8;
+`;
+
+const FightResult = styled.div`
+  color: white;
+  text-align: center;
+  width: 100%;
+  border-radius: 10px;
+  margin: 1rem;
+  padding: 1rem;
+  font-size: 1.5rem;
+  background-color: lightgreen;
+  &:first-letter {
+    text-transform: capitalize;
+  }
+`;
+
+const Tada = styled.div`
+  animation: 2s ${keyframes`${tada}`} infinite;
 `;
