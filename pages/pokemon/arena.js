@@ -81,7 +81,7 @@ export default function Home({ details }) {
         <p>
           {" "}
           Zurück zur{" "}
-          <Link href="http://localhost:3000/">
+          <Link href="/">
             <a>Startseite</a>
           </Link>
         </p>
