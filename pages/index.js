@@ -7,7 +7,7 @@ export default function Home({ details }) {
   return (
     <MainDiv>
       <IntroDiv>
-        <h1>Gotta catch 'em all!</h1>
+        <h1>Gotta catch them all!</h1>
         <h2>Pokemon-Master CJ</h2>
         <StyledImage src="/images/pic.png" height={228} width={241} alt="CJ" />
         <p>Wow. Many Pokemon. Much catch.</p>
